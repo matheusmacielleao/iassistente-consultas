@@ -9,7 +9,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "verbatimModuleSyntax": true,
-
     "noEmit": true,
     "composite": true,
     "strict": true,

@@ -26,10 +26,10 @@ const server = Bun.serve({
 
     if (/^\/patients\/\d{11}\/appointments$/.test(url.pathname)) {
       if (req.method === "POST") {
-        return handlerCreateAppointment(req, url);
+        return handlerCreateAppointment(req, url.pathname);
       }
       if (req.method === "GET") {
-        return handlerGetPatientAppointments(req, url);
+        return handlerGetPatientAppointments(req, url.pathname);
       }
     }
     return new Response("Not found", { status: 404 });
