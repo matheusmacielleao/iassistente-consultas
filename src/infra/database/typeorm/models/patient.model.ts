@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import type {
   CreatePatientDto,
   Patient,
 } from "../../../../core/domain/entities/patient";
+import { AppointmentModel } from "./appointment.model";
 
 @Entity()
 export class PatientModel implements Patient {
@@ -22,4 +23,6 @@ export class PatientModel implements Patient {
   comorbidities!: string[];
   @Column("simple-array")
   continuosMedications!: string[];
+  @OneToMany(() => AppointmentModel, (appointment) => appointment.patient)
+  appointments!: AppointmentModel[];
 }

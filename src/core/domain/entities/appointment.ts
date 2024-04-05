@@ -1,19 +1,26 @@
-import { Patient } from "./patient";
+import type { Patient } from "./patient";
 
 export interface Appointment {
-  id: string;
+  id?: string;
   date: Date;
   patient: Patient;
   notes: Notes[];
   prescriptions: Prescription[];
 }
 
-interface Notes {
+export interface CreateAppointmentDto {
+  date: Date;
+  patientCpf: string;
+  notes: Notes[];
+  prescriptions: Prescription[];
+}
+
+export interface Notes {
   id: number; // primary key editavel por causa da possibildade de mudar
   note: string;
 }
 
-interface Prescription {
+export interface Prescription {
   id: number;
   medicine: string;
   dosage: string;
