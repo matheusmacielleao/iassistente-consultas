@@ -8,6 +8,7 @@ import {
   handlerCreatePatient,
   handlerGetPatients,
 } from "./infra/web/handlers/patient-handlers";
+import { handlerAudioResume } from "./infra/web/handlers/resume-handler";
 
 TypeOrmDataSource.initialize();
 const server = Bun.serve({
@@ -21,6 +22,12 @@ const server = Bun.serve({
       }
       if (req.method === "POST") {
         return handlerCreatePatient(req);
+      }
+    }
+
+    if (url.pathname == "/resume") {
+      if (req.method === "POST") {
+        return handlerAudioResume(req);
       }
     }
 
