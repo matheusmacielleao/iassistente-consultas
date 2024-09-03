@@ -341,7 +341,7 @@ paths:
                   error:
                     type: string
 
-  /resume/audio:
+  /resume:
     post:
       tags:
         - Transcription and Resume
