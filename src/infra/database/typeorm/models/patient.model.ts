@@ -1,8 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import type {
-  CreatePatientDto,
-  Patient,
-} from "../../../../core/domain/entities/patient";
+import type { Patient } from "../../../../core/domain/entities/patient";
 import { AppointmentModel } from "./appointment.model";
 
 @Entity()

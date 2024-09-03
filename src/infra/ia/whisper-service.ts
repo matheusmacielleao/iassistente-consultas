@@ -14,7 +14,6 @@ export class WhisperService implements SpeechToText {
 
   async recognizeSpeech(audioFilePath: string): Promise<string> {
     const splitedFilesPaths = await this.splitMp3File(audioFilePath);
-
     const transcriptions = await Promise.all(
       splitedFilesPaths.map((filePath) => this.sendToWhisper(filePath))
     );
