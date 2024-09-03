@@ -13,12 +13,18 @@ tags:
     description: Endpoints relacionados à transcrição de áudios e resumos
 
 paths:
-  /appointments:
+  /patients/{cpf}/appointments:
     get:
       tags:
         - Appointments
-      summary: Lista todas as consultas
+      summary: Lista todas as consultas de um paciente
       operationId: getAppointments
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Lista de consultas
@@ -43,6 +49,12 @@ paths:
         - Appointments
       summary: Cria uma nova consulta
       operationId: createAppointment
+      parameters:
+        - name: cpf
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -95,7 +107,7 @@ paths:
                   error:
                     type: string
 
-    put:
+    patch:
       tags:
         - Appointments
       summary: Atualiza uma consulta existente
@@ -253,7 +265,7 @@ paths:
                   error:
                     type: string
 
-    put:
+    patch:
       tags:
         - Patients
       summary: Atualiza um paciente existente
