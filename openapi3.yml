@@ -33,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Appointment'
+                  $ref: '#/components/schemas/CreateAppointment'
         '400':
           description: Erro na solicitação
           content:
@@ -123,7 +123,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/CreateAppointment'
       responses:
         '200':
           description: Consulta atualizada com sucesso
@@ -378,6 +378,23 @@ paths:
 
 components:
   schemas:
+    CreateAppointment:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        patient:
+          $ref: '#/components/schemas/Patient'
+        notes:
+          type: array
+          items:
+            type: string
+        prescriptions:
+          type: array
+          items:
+            type: string
+
     Appointment:
       type: object
       properties:
