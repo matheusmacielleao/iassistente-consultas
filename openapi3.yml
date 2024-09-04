@@ -384,8 +384,6 @@ components:
         date:
           type: string
           format: date-time
-        patient:
-          $ref: '#/components/schemas/Patient'
         notes:
           type: array
           items:
