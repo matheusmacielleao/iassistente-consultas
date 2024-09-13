@@ -2,6 +2,8 @@ import type OpenAI from "openai";
 import type { SpeechToText } from "../../core/application/services/speech-to-text-service";
 import fs from "fs";
 import mm, { type IAudioMetadata } from "music-metadata";
+import { unlink } from "node:fs/promises";
+
 const MediaSplit = require("../../../media-split");
 
 export class WhisperService implements SpeechToText {
@@ -12,13 +14,34 @@ export class WhisperService implements SpeechToText {
       : 25;
   }
 
-  async recognizeSpeech(audioFilePath: string): Promise<string> {
-    const splitedFilesPaths = await this.splitMp3File(audioFilePath);
+  async recognizeSpeech(
+    audioFilePath: string,
+    hashFolderPath: string
+  ): Promise<string> {
+    const splitedFilesPaths = await this.splitMp3File(
+      audioFilePath,
+      hashFolderPath
+    );
     const transcriptions = await Promise.all(
       splitedFilesPaths.map((filePath) => this.sendToWhisper(filePath))
     );
+
+    this.deleteFiles([...splitedFilesPaths, audioFilePath]);
+
     return transcriptions.join(" ");
   }
+
+  async deleteFiles(filePaths: string[]): Promise<void> {
+    const unlinkPromises = filePaths.map((filePath) => {
+      return unlink(filePath);
+    });
+    try {
+      await Promise.all(unlinkPromises);
+    } catch (error) {
+      console.error("Error deleting files:", error);
+    }
+  }
+
   async sendToWhisper(audioFilePath: string): Promise<string> {
     const transcription = await this.openai.audio.transcriptions.create({
       file: fs.createReadStream(audioFilePath),
@@ -30,7 +53,10 @@ export class WhisperService implements SpeechToText {
     return transcription.text;
   }
 
-  async splitMp3File(filePath: string): Promise<SlitedFilePaths> {
+  async splitMp3File(
+    filePath: string,
+    hashFolderPath: string
+  ): Promise<SlitedFilePaths> {
     const mbChuncksSize = this.whisperFileLimit;
 
     const parser: IAudioMetadata = await mm.parseFile(filePath, {
@@ -61,17 +87,17 @@ export class WhisperService implements SpeechToText {
       const start = `${date.getMinutes()}:${date.getSeconds()}`;
       date.setTime(date.getTime() + sectionsSize * 1000);
       const end = `${date.getMinutes()}:${date.getSeconds()}`;
-      sections.push(`[${start} - ${end}] part-${i + 1}`);
+      sections.push(`[${start} - ${end}] ${hashFolderPath}-part-${i + 1}`);
     }
-
     const split = new MediaSplit({
       input: filePath,
       sections,
-    } as any);
+      output: "./temp",
+    });
 
     const splitedFilesPaths: Array<string> = (await split.parse()).map(
       (section: { name: string }) => {
-        return section.name;
+        return "./temp/" + section.name;
       }
     );
     return splitedFilesPaths;

@@ -7,9 +7,13 @@ export class GenerateAppointmentResume {
     private readonly speechToText: SpeechToText
   ) {}
 
-  async OfAudioRecording(audioFilePath: string): Promise<string[]> {
+  async OfAudioRecording(
+    audioFilePath: string,
+    hash: string
+  ): Promise<string[]> {
     const transcription = await this.speechToText.recognizeSpeech(
-      audioFilePath
+      audioFilePath,
+      hash
     );
     return this.llmService.getResumeOfTextInListFormat(transcription);
   }

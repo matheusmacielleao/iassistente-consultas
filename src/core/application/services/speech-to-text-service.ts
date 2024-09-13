@@ -1,3 +1,6 @@
 export interface SpeechToText {
-  recognizeSpeech(audioFilePath: string): Promise<string>;
+  recognizeSpeech(
+    audioFilePath: string,
+    hashFolderPath: string
+  ): Promise<string>;
 }

@@ -10,12 +10,15 @@ export const handlerAudioResume = async (
   }
 
   const blob = audio as unknown as Blob;
+  const hash = Math.random().toString(36).substring(7);
 
-  await Bun.write("temp/audio.mp3", blob);
+  const audioFilePath = `temp/${hash}-audio.mp3`;
 
-  const audioFilePath = "temp/audio.mp3";
+  await Bun.write(audioFilePath, blob);
+
   const resume = await generateAppointmentResume.OfAudioRecording(
-    audioFilePath
+    audioFilePath,
+    hash
   );
 
   return Response.json(resume);
