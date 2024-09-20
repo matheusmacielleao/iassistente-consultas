@@ -19,14 +19,20 @@ export class TypeOrmAppointmentRepository implements AppointmentRepository {
     await this.repo.save(newAppointment);
     return newAppointment;
   }
-  updateAppointment(appointment: Appointment): Promise<Appointment> {
-    throw new Error("Method not implemented.");
+  async updateAppointment(appointment: Appointment): Promise<Appointment> {
+    const updatedAppointment = await this.repo.save(appointment);
+    return updatedAppointment;
   }
-  deleteAppointment(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteAppointment(id: string): Promise<void> {
+    console.log("id", id);
+    await this.repo.delete(id);
   }
-  getAppointmentById(id: string): Promise<Appointment | undefined> {
-    throw new Error("Method not implemented.");
+  async getAppointmentById(id: string): Promise<Appointment | undefined> {
+    const appointment = await this.repo.findOne({ where: { id } });
+    if (!appointment) {
+      return;
+    }
+    return appointment;
   }
   async getAppointments({
     offset,

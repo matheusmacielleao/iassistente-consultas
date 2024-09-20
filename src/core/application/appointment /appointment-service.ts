@@ -1,4 +1,7 @@
-import type { CreateAppointmentDto } from "../../domain/entities/appointment";
+import type {
+  Appointment,
+  CreateAppointmentDto,
+} from "../../domain/entities/appointment";
 import type { Patient } from "../../domain/entities/patient";
 import type { PatientService } from "../patient/patient-service";
 import type { AppointmentRepository } from "./appointment-repository";
@@ -17,8 +20,9 @@ export class AppointmentService {
       throw new Error("Patient not found");
     }
     return this.appointmentRepository.createAppointment({
-      patient,
       ...payload,
+      patient,
+      notes: payload.notes.map((note) => ({ note } as any)),
     });
   }
 
@@ -26,11 +30,20 @@ export class AppointmentService {
     return this.appointmentRepository.getAppointments({ offset, limit });
   }
 
-  async getAppointmentById(id: string) {
-    return this.appointmentRepository.getAppointmentById(id);
-  }
-
   async getAppointmentsByPatientId(patientId: string) {
     return this.appointmentRepository.getAppointmentsByPatientId(patientId);
+  }
+  async updateAppointment(id: string, payload: any) {
+    return this.appointmentRepository.updateAppointment({
+      ...payload,
+      notes: payload.notes.map((note: any) => ({ note } as any)),
+      id,
+    });
+  }
+  async deleteAppointment(id: string) {
+    return this.appointmentRepository.deleteAppointment(id);
+  }
+  async getAppointmentById(id: string): Promise<Appointment | undefined> {
+    return this.appointmentRepository.getAppointmentById(id);
   }
 }

@@ -26,6 +26,34 @@ export async function handlerGetPatientAppointments(
   return Response.json(appointments);
 }
 
+export async function handlerUpdateAppointment(
+  request: Request,
+  pathname: string
+): Promise<Response> {
+  const id = pathname.split("/")[4];
+  if (!request.body) {
+    return new Response("Body is required", { status: 400 });
+  }
+  const payload = await Bun.readableStreamToJSON(request.body);
+  const appointment = await appointmentService.updateAppointment(
+    Number(id) as any,
+    payload
+  );
+  return Response.json(appointment);
+}
+
+export async function handlerDeleteAppointment(
+  request: Request,
+  pathname: string
+): Promise<Response> {
+  const id = pathname.split("/")[4];
+
+  const appointment = await appointmentService.deleteAppointment(
+    Number(id) as any
+  );
+  return Response.json(appointment);
+}
+
 export async function handlerGetAppointments(
   request: Request,
   url: URL
@@ -35,4 +63,13 @@ export async function handlerGetAppointments(
     limit: 10,
   });
   return Response.json(appointments);
+}
+
+export async function handlerGetAppointmentById(
+  request: Request,
+  pathname: string
+): Promise<Response> {
+  const id = pathname.split("/")[4];
+  const appointment = await appointmentService.getAppointmentById(id);
+  return Response.json(appointment);
 }

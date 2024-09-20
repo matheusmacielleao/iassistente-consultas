@@ -1,8 +1,11 @@
 import { TypeOrmDataSource } from "./infra/database/typeorm/type-orm.config";
 import {
   handlerCreateAppointment,
+  handlerDeleteAppointment,
+  handlerGetAppointmentById,
   handlerGetAppointments,
   handlerGetPatientAppointments,
+  handlerUpdateAppointment,
 } from "./infra/web/handlers/appointment-handler";
 import {
   handlerCreatePatient,
@@ -31,6 +34,17 @@ const server = Bun.serve({
       }
     }
 
+    if (/^\/patients\/\d{11}\/appointments\/\d+$/.test(url.pathname)) {
+      if (req.method === "PUT") {
+        return handlerUpdateAppointment(req, url.pathname);
+      }
+      if (req.method === "DELETE") {
+        return handlerDeleteAppointment(req, url.pathname);
+      }
+      if (req.method === "GET") {
+        return handlerGetAppointmentById(req, url.pathname);
+      }
+    }
     if (/^\/patients\/\d{11}\/appointments$/.test(url.pathname)) {
       if (req.method === "POST") {
         return handlerCreateAppointment(req, url.pathname);

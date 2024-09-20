@@ -11,7 +11,7 @@ export interface Appointment {
 export interface CreateAppointmentDto {
   date: Date;
   patientCpf: string;
-  notes: Notes[];
+  notes: string[];
   prescriptions: Prescription[];
 }
 
